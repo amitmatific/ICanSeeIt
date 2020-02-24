@@ -23,7 +23,7 @@ var selectSource = function(source) {
     TransitionTo(doc.data, source.value);
 };
 
-var data = fetch("episode.json")
+var data = fetch("episode_f.json")
     .then(function(response) {return response.json()} )
     .then(function(data) {
         return data;
@@ -44,7 +44,7 @@ var yPosition = d3.scaleLinear()
     .range([height, 0]);       // This is the corresponding value I want in Pixel
 
     var color = d3.scaleLinear()
-        .domain([100, 25, 15, 10, 5, 0])
+        .domain([0, 30, 40, 55, 65, 100])
         .range(['#d73027',
             '#f46d43',
             '#fdae61',
@@ -69,9 +69,14 @@ var episodeText = function (d) {
     }
 };
 
-var strokeWidth = function(d) {
+var strokeWidth = function(d, selectedSource) {
+
     if (selectedSource === "total") {
-        return border(d)
+        if (d.source["web"]["finishRate"]-d.source["tablet"]["finishRate"] > 30)
+            return 4;
+        else {
+            return 0;
+        }
     } else {
         return 0;
     }
@@ -89,11 +94,11 @@ var TransitionTo = function (data, selectedSource) {
         .attr("cy", function(d){
             return yPosition(d.source[selectedSource]["noSubmitRate"])
         })
-        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/1000 })
-        .attr("fill", d => color(d.source[selectedSource]["noSubmitRate"]))
-        .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
-        .style("stroke", "red")
-        .style("stroke-width", d => strokeWidth(d));
+        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/500 })
+        .attr("fill", d => color(d.source[selectedSource]["finishRate"]))
+        .attr("opacity", d => opacity(d.source[selectedSource]["noSubmitRate"]))
+        .style("stroke", "black")
+        .style("stroke-width", d => strokeWidth(d, selectedSource));
 
     svG.selectAll("text")
         .remove();
@@ -149,11 +154,11 @@ var visualize = function(data, selectedSource) {
         .attr("cy", function(d){
             return yPosition(d.source[selectedSource]["noSubmitRate"])
         })
-        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/1000 })
-        .attr("fill", d => color(d.source[selectedSource]["noSubmitRate"]))
-        .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
+        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/500 })
+        .attr("fill", d => color(d.source[selectedSource]["finishRate"]))
+        .attr("opacity", d => opacity(d.source[selectedSource]["noSubmitRate"]))
         .style("stroke", "red")
-        .style("stroke-width", d => strokeWidth(d));
+        .style("stroke-width", d => strokeWidth(d, selectedSource));
     
     elemEnter.append("text")
         .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
