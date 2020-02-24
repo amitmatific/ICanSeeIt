@@ -1,7 +1,7 @@
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 40, bottom: 30, left: 30},
-    width = 1200 - margin.left - margin.right,
-    height = 700 - margin.top - margin.bottom;
+var margin = {top: 10, right: 40, bottom: 30, left: 30};
+var width = 1200 - margin.left - margin.right;
+var height = 700 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svG = d3.select("#scatter_area")
@@ -50,9 +50,15 @@ svG
     .append('g')
     .call(d3.axisLeft(yPosition));
 
-var color = d3.scaleSequential()
-    .domain([0, 100])
-    .interpolator(d3.interpolateRainbow);
+    var color = d3.scaleLinear()
+        .domain([100, 25, 15, 10, 5, 0])
+        .range(['#d73027',
+            '#f46d43',
+            '#fdae61',
+            '#fee08b',
+            '#a6d96a',
+            '#66bd63'])
+        .interpolate(d3.interpolateHcl);
 
 var opacity = d3.scaleLinear()
     .domain([0,100])
@@ -115,16 +121,28 @@ var visualize = function(data, selectedSource) {
         .attr("cy", function(d){
             return yPosition(d.source[selectedSource]["noSubmitRate"])
         })
-        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/1000 })
+        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/100 })
         .attr("fill", d => color(d.source[selectedSource]["noSubmitRate"]))
         .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
         .style("stroke", "red")
-        .style("stroke-width", function(d){ return border(d, selectedSource)});
+        .style("stroke-width", function(d){
+            if (selectedSource === "total") {
+                return border(d)
+            } else {
+                return 0;
+            }
+        });
     
     elemEnter.append("text")
-        .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
-        .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) })
-        .text(function(d){return d.episodeName});
+        .attr("x", function(d){ return xPosition(d.source.web.finishRate) })
+        .attr("y", function(d){ return yPosition(d.source.web.noSubmitRate) })
+        .text(function(d){
+            if (d.source[selectedSource]["userCount"] > 500) {
+                return d.episodeName.substring(0, 6)
+            } else {
+                return "";
+            }
+        });
 
     elemEnter.append("title")
         .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
