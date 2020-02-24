@@ -12,6 +12,11 @@
           "finishRate": 10,
           "noSubmitRate": 3,
           "userCount": 5000
+        },
+        "total": {
+          "finishRate": 10,
+          "noSubmitRate": 3,
+          "userCount": 28000
         }
       }
     },
@@ -27,6 +32,11 @@
           "finishRate": 24,
           "noSubmitRate": 5,
           "userCount": 1200
+        },
+        "total": {
+          "finishRate": 10,
+          "noSubmitRate": 3,
+          "userCount": 11200
         }
       }
     },
@@ -42,6 +52,11 @@
           "finishRate": 20,
           "noSubmitRate": 20,
           "userCount": 50000
+        },
+        "total": {
+          "finishRate": 10,
+          "noSubmitRate": 3,
+          "userCount": 55000
         }
       }
     }
