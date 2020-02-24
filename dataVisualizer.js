@@ -23,7 +23,7 @@ var selectSource = function(source) {
     TransitionTo(doc.data, source.value);
 };
 
-var data = fetch("data.json")
+var data = fetch("episode.json")
     .then(function(response) {return response.json()} )
     .then(function(data) {
         return data;
@@ -96,7 +96,7 @@ var TransitionTo = function (data, selectedSource) {
         .attr("cy", function(d){
             return yPosition(d.source[selectedSource]["noSubmitRate"])
         })
-        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/100 })
+        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/1000 })
         .attr("fill", d => color(d.source[selectedSource]["noSubmitRate"]))
         .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
         .style("stroke", "red")
@@ -156,7 +156,7 @@ var visualize = function(data, selectedSource) {
         .attr("cy", function(d){
             return yPosition(d.source[selectedSource]["noSubmitRate"])
         })
-        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/100 })
+        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/1000 })
         .attr("fill", d => color(d.source[selectedSource]["noSubmitRate"]))
         .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
         .style("stroke", "red")
