@@ -12,17 +12,18 @@ var svG = d3.select("#scatter_area")
     .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
+var selectedSource = "web";
+
 var data = fetch("data.json")
     .then(function(response) {return response.json()} )
     .then(function(data) {
         return data;
     })
     .then(function(data) {
-        doAll(data.data);
+        visualize(data.data, selectedSource);
     });
 
-
-var doAll = function(data) {
+var visualize = function(data, selectedSource) {
     // X scale and Axis
     var xPosition = d3.scaleLinear()
         .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
@@ -49,7 +50,7 @@ var doAll = function(data) {
         .range([0.3, 1]);
 
     var border = function(d) {
-        return d.source.web.finishRate > 30 ? 0 : 4;
+        return d.source[selectedSource]["finishRate"] > 30 ? 0 : 4;
     };
 
 // Add 3 dots for 0, 50 and 100%
@@ -58,11 +59,15 @@ var doAll = function(data) {
         .data(data)
         .enter()
         .append("circle")
-        .attr("cx", function(d){ return xPosition(d.source.web.finishRate) })
-        .attr("cy", function(d){ return yPosition(d.source.web.noSubmitRate) })
-        .attr("r", function(d){ return d.source.web.userCount/1000 })
-        .attr("fill", d => color(d.source.web.noSubmitRate))
-        .attr("opacity", d => opacity(d.source.web.finishRate))
+        .attr("cx", function(d){
+            return xPosition(d.source[selectedSource]["finishRate"])
+        })
+        .attr("cy", function(d){
+            return yPosition(d.source[selectedSource]["noSubmitRate"])
+        })
+        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/1000 })
+        .attr("fill", d => color(d.source[selectedSource]["noSubmitRate"]))
+        .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
         .style("stroke", "red")
         .style("stroke-width", function(d){ return border(d)});
 };
