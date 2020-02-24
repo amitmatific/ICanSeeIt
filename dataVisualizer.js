@@ -10,7 +10,10 @@ var svG = d3.select("#scatter_area")
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
+        "translate(" + margin.left + "," + margin.top + ")")
+    .attr("font-size", 10)
+    .attr("font-family", "sans-serif")
+    .attr("text-anchor", "middle");
 
 var selectedSource = "web";
 var data = null;
@@ -66,10 +69,12 @@ var visualize = function(data, selectedSource) {
     };
 
 // Add 3 dots for 0, 50 and 100%
-    svG
+    let element = svG
         .selectAll("whatever")
-        .data(data)
-        .enter()
+        .data(data);
+    var elemEnter = element.enter()
+        .append("g");
+    elemEnter
         .append("circle")
         .attr("cx", function(d){
             return xPosition(d.source[selectedSource]["finishRate"])
@@ -82,5 +87,15 @@ var visualize = function(data, selectedSource) {
         .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
         .style("stroke", "red")
         .style("stroke-width", function(d){ return border(d)});
+    
+    elemEnter.append("text")
+        .attr("x", function(d){ return xPosition(d.source.web.finishRate) })
+        .attr("y", function(d){ return yPosition(d.source.web.noSubmitRate) })
+        .text(function(d){return d.episodeName});
+
+    elemEnter.append("svg:title")
+        .attr("x", function(d){ return xPosition(d.source.web.finishRate) })
+        .attr("y", function(d){ return yPosition(d.source.web.noSubmitRate) })
+        .text(function(d){return d.episodeName});
 };
 
