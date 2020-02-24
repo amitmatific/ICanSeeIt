@@ -1,45 +1,49 @@
 {
   "data": [
     {
-      "x": 10,
-      "y": 20,
       "episodeName": "episode1",
-      "finishRate": 50.3,
-      "noSubmitRate": 8,
-      "userCount": 5000
+      "source": {
+        "web": {
+          "finishRate": 24,
+          "noSubmitRate": 14,
+          "userCount": 23000
+        },
+        "tablet": {
+          "finishRate": 10,
+          "noSubmitRate": 3,
+          "userCount": 5000
+        }
+      }
     },
     {
-      "x": 10,
-      "y": 20,
       "episodeName": "episode2",
-      "finishRate": 24,
-      "noSubmitRate": 3,
-      "userCount": 50000
+      "source": {
+        "web": {
+          "finishRate": 45,
+          "noSubmitRate": 3,
+          "userCount": 500
+        },
+        "tablet": {
+          "finishRate": 24,
+          "noSubmitRate": 5,
+          "userCount": 1200
+        }
+      }
     },
     {
-      "x": 10,
-      "y": 20,
       "episodeName": "episode3",
-      "finishRate": 61,
-      "noSubmitRate": 6,
-      "userCount": 500
-    },
-    {
-      "x": 10,
-      "y": 20,
-      "episodeName": "episode4",
-      "finishRate": 99,
-      "noSubmitRate": 0.5,
-      "userCount": 50
-    },
-    {
-      "x": 10,
-      "y": 20,
-      "episodeName": "episode5",
-      "finishRate": 2,
-      "noSubmitRate": 50,
-      "userCount": 5000
+      "source": {
+        "web": {
+          "finishRate": 24,
+          "noSubmitRate": 3,
+          "userCount": 5000
+        },
+        "tablet": {
+          "finishRate": 20,
+          "noSubmitRate": 20,
+          "userCount": 50000
+        }
+      }
     }
-
   ]
 }
