@@ -12,33 +12,42 @@ var svG = d3.select("#scatter_area")
     .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
-// Create data
-var data = [ {x:10, y:20}, {x:40, y:90}, {x:80, y:50} ]
+var data = fetch("data.json")
+    .then(function(response) {return response.json()} )
+    .then(function(data) {
+        return data;
+    })
+    .then(function(data) {
+        doAll(data.data);
+    });
+
+
+var doAll = function(data) {
+    // X scale and Axis
+    var x = d3.scaleLinear()
+        .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
+        .range([0, width]);       // This is the corresponding value I want in Pixel
+    svG
+        .append('g')
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
 
 // X scale and Axis
-var x = d3.scaleLinear()
-    .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
-    .range([0, width]);       // This is the corresponding value I want in Pixel
-svG
-    .append('g')
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x));
-
-// X scale and Axis
-var y = d3.scaleLinear()
-    .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
-    .range([height, 0]);       // This is the corresponding value I want in Pixel
-svG
-    .append('g')
-    .call(d3.axisLeft(y));
+    var y = d3.scaleLinear()
+        .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
+        .range([height, 0]);       // This is the corresponding value I want in Pixel
+    svG
+        .append('g')
+        .call(d3.axisLeft(y));
 
 // Add 3 dots for 0, 50 and 100%
-svG
-    .selectAll("whatever")
-    .data(data)
-    .enter()
-    .append("circle")
-    .attr("cx", function(d){ return x(d.x) })
-    .attr("cy", function(d){ return y(d.y) })
-    .attr("r", 7)
+    svG
+        .selectAll("whatever")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", function(d){ return x(d.x) })
+        .attr("cy", function(d){ return y(d.y) })
+        .attr("r", 7)
+};
 
