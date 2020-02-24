@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "episodeName": "episode1",
+      "finishRate": 50.3,
+      "noSubmitRate": 8,
+      "userCount": 5000
+    },
+    {
+      "episodeName": "episode2",
+      "finishRate": 24,
+      "noSubmitRate": 3,
+      "userCount": 50000
+    },
+    {
+      "episodeName": "episode3",
+      "finishRate": 61,
+      "noSubmitRate": 6,
+      "userCount": 500
+    },
+    {
+      "episodeName": "episode4",
+      "finishRate": 99,
+      "noSubmitRate": 0.5,
+      "userCount": 50
+    },{
+      "episodeName": "episode5",
+      "finishRate": 2,
+      "noSubmitRate": 50,
+      "userCount": 5000
+    }
+
+  ]
+}
