@@ -1,7 +1,7 @@
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 40, bottom: 30, left: 30};
 var width = 1200 - margin.left - margin.right;
-var height = 700 - margin.top - margin.bottom;
+var height = 600 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svG = d3.select("#scatter_area")
@@ -37,18 +37,11 @@ var data = fetch("episode.json")
 var xPosition = d3.scaleLinear()
     .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
     .range([0, width]);       // This is the corresponding value I want in Pixel
-svG
-    .append('g')
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(xPosition));
 
 // X scale and Axis
 var yPosition = d3.scaleLinear()
     .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
     .range([height, 0]);       // This is the corresponding value I want in Pixel
-svG
-    .append('g')
-    .call(d3.axisLeft(yPosition));
 
     var color = d3.scaleLinear()
         .domain([100, 25, 15, 10, 5, 0])
