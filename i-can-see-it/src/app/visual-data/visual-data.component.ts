@@ -114,7 +114,7 @@ export class VisualDataComponent implements OnInit {
           total: {
             finishRate: 100 *((parseFloat(dataObjects[i].web_finish_episode) + parseFloat(dataObjects[i].tablet_finish_episode)) || 0)
              / (parseFloat(dataObjects[i].web_start_episode) + parseFloat(dataObjects[i].tablet_start_episode)) || 0,
-            noSubmitRate: (parseFloat(dataObjects[i].web_no_submit) + parseFloat(dataObjects[i].tablet_no_submit))
+            noSubmitRate: 100 * (parseFloat(dataObjects[i].web_no_submit) + parseFloat(dataObjects[i].tablet_no_submit))
               / (parseFloat(dataObjects[i].web_start_episode) + parseFloat(dataObjects[i].tablet_start_episode)) || 0,
             userCount: parseFloat(dataObjects[i].web_start_episode) + parseFloat(dataObjects[i].tablet_start_episode)
           }
