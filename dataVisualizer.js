@@ -13,6 +13,17 @@ var svG = d3.select("#scatter_area")
         "translate(" + margin.left + "," + margin.top + ")");
 
 var selectedSource = "web";
+var data = null;
+var doc = this;
+
+var selectSource = function(source) {
+    clearVisualization();
+    visualize(doc.data, source.value);
+};
+
+var clearVisualization = function () {
+    
+};
 
 var data = fetch("data.json")
     .then(function(response) {return response.json()} )
@@ -20,6 +31,7 @@ var data = fetch("data.json")
         return data;
     })
     .then(function(data) {
+        doc.data = data.data;
         visualize(data.data, selectedSource);
     });
 
