@@ -20,12 +20,7 @@ var data = null;
 var doc = this;
 
 var selectSource = function(source) {
-    clearVisualization();
-    visualize(doc.data, source.value);
-};
-
-var clearVisualization = function () {
-    
+    TransitionTo(doc.data, source.value);
 };
 
 var data = fetch("data.json")
@@ -38,35 +33,73 @@ var data = fetch("data.json")
         visualize(data.data, selectedSource);
     });
 
-var visualize = function(data, selectedSource) {
-    // X scale and Axis
-    var xPosition = d3.scaleLinear()
-        .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
-        .range([0, width]);       // This is the corresponding value I want in Pixel
-    svG
-        .append('g')
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xPosition));
+// X scale and Axis
+var xPosition = d3.scaleLinear()
+    .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
+    .range([0, width]);       // This is the corresponding value I want in Pixel
+svG
+    .append('g')
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(xPosition));
 
 // X scale and Axis
-    var yPosition = d3.scaleLinear()
-        .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
-        .range([height, 0]);       // This is the corresponding value I want in Pixel
-    svG
-        .append('g')
-        .call(d3.axisLeft(yPosition));
+var yPosition = d3.scaleLinear()
+    .domain([0, 100])         // This is the min and the max of the data: 0 to 100 if percentages
+    .range([height, 0]);       // This is the corresponding value I want in Pixel
+svG
+    .append('g')
+    .call(d3.axisLeft(yPosition));
 
-    var color = d3.scaleSequential()
-        .domain([0, 100])
-        .interpolator(d3.interpolateRainbow);
+var color = d3.scaleSequential()
+    .domain([0, 100])
+    .interpolator(d3.interpolateRainbow);
 
-    var opacity = d3.scaleLinear()
-        .domain([0,100])
-        .range([0.3, 1]);
+var opacity = d3.scaleLinear()
+    .domain([0,100])
+    .range([0.3, 1]);
 
-    var border = function(d) {
-        return d.source[selectedSource]["finishRate"] > 30 ? 0 : 4;
-    };
+var border = function(d, selectedSource) {
+    return d.source[selectedSource]["finishRate"] > 30 ? 0 : 4;
+};
+
+var TransitionTo = function (data, selectedSource) {
+    let element = svG
+        .selectAll("circle")
+        .data(data);
+    element
+        .transition()
+        .attr("cx", function(d){
+            return xPosition(d.source[selectedSource]["finishRate"])
+        })
+        .attr("cy", function(d){
+            return yPosition(d.source[selectedSource]["noSubmitRate"])
+        })
+        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/1000 })
+        .attr("fill", d => color(d.source[selectedSource]["noSubmitRate"]))
+        .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
+        .style("stroke", "red")
+        .style("stroke-width", function(d){ return border(d, selectedSource)});
+
+    var texts = svG
+        .selectAll("text")
+        .data(data);
+    texts
+        .transition()
+        .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
+        .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) });
+
+    var titles = svG
+        .selectAll("title")
+        .data(data);
+    titles
+        .transition()
+        .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
+        .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) });
+
+};
+
+var visualize = function(data, selectedSource) {
+
 
 // Add 3 dots for 0, 50 and 100%
     let element = svG
@@ -86,16 +119,16 @@ var visualize = function(data, selectedSource) {
         .attr("fill", d => color(d.source[selectedSource]["noSubmitRate"]))
         .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
         .style("stroke", "red")
-        .style("stroke-width", function(d){ return border(d)});
+        .style("stroke-width", function(d){ return border(d, selectedSource)});
     
     elemEnter.append("text")
-        .attr("x", function(d){ return xPosition(d.source.web.finishRate) })
-        .attr("y", function(d){ return yPosition(d.source.web.noSubmitRate) })
+        .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
+        .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) })
         .text(function(d){return d.episodeName});
 
-    elemEnter.append("svg:title")
-        .attr("x", function(d){ return xPosition(d.source.web.finishRate) })
-        .attr("y", function(d){ return yPosition(d.source.web.noSubmitRate) })
+    elemEnter.append("title")
+        .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
+        .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) })
         .text(function(d){return d.episodeName});
 };
 
