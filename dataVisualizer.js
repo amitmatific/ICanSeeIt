@@ -68,6 +68,22 @@ var border = function(d, selectedSource) {
     return d.source[selectedSource]["finishRate"] > 30 ? 0 : 4;
 };
 
+var episodeText = function (d) {
+    if (d.source[selectedSource]["userCount"] > 500) {
+        return d.episodeName.substring(0, 6)
+    } else {
+        return "";
+    }
+};
+
+var strokeWidth = function(d) {
+    if (selectedSource === "total") {
+        return border(d)
+    } else {
+        return 0;
+    }
+};
+
 var TransitionTo = function (data, selectedSource) {
     let element = svG
         .selectAll("circle")
@@ -80,27 +96,46 @@ var TransitionTo = function (data, selectedSource) {
         .attr("cy", function(d){
             return yPosition(d.source[selectedSource]["noSubmitRate"])
         })
-        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/1000 })
+        .attr("r", function(d){ return d.source[selectedSource]["userCount"]/100 })
         .attr("fill", d => color(d.source[selectedSource]["noSubmitRate"]))
         .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
         .style("stroke", "red")
-        .style("stroke-width", function(d){ return border(d, selectedSource)});
+        .style("stroke-width", d => strokeWidth(d));
 
-    var texts = svG
-        .selectAll("text")
+    svG.selectAll("text")
+        .remove();
+    var elements = svG
+        .selectAll("Whatever")
         .data(data);
-    texts
-        .transition()
+    elements
+        .enter()
+        .append("text")
         .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
-        .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) });
+        .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) })
+        .text(function(d){ return episodeText(d)});
 
-    var titles = svG
-        .selectAll("title")
-        .data(data);
-    titles
-        .transition()
+    elements.append("title")
         .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
-        .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) });
+        .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) })
+        .text(function(d){return d.episodeName});
+
+    // var texts = svG
+    //     .selectAll("text")
+    //     .data(data);
+    // texts
+    //     .transition()
+    //     .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
+    //     .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) });
+    //
+    // var titles = svG
+    //     .selectAll("title")
+    //     .data(data);
+    // titles
+    //     .transition()
+    //     .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
+    //     .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) });
+
+
 
 };
 
@@ -125,24 +160,12 @@ var visualize = function(data, selectedSource) {
         .attr("fill", d => color(d.source[selectedSource]["noSubmitRate"]))
         .attr("opacity", d => opacity(d.source[selectedSource]["finishRate"]))
         .style("stroke", "red")
-        .style("stroke-width", function(d){
-            if (selectedSource === "total") {
-                return border(d)
-            } else {
-                return 0;
-            }
-        });
+        .style("stroke-width", d => strokeWidth(d));
     
     elemEnter.append("text")
-        .attr("x", function(d){ return xPosition(d.source.web.finishRate) })
-        .attr("y", function(d){ return yPosition(d.source.web.noSubmitRate) })
-        .text(function(d){
-            if (d.source[selectedSource]["userCount"] > 500) {
-                return d.episodeName.substring(0, 6)
-            } else {
-                return "";
-            }
-        });
+        .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
+        .attr("y", function(d){ return yPosition(d.source[selectedSource]["noSubmitRate"]) })
+        .text(function(d){ return episodeText(d)});
 
     elemEnter.append("title")
         .attr("x", function(d){ return xPosition(d.source[selectedSource]["finishRate"]) })
