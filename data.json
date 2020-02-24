@@ -4,7 +4,7 @@
       "episodeName": "episode1",
       "source": {
         "web": {
-          "finishRate": 24,
+          "finishRate": 3,
           "noSubmitRate": 14,
           "userCount": 23000
         },
@@ -19,9 +19,9 @@
       "episodeName": "episode2",
       "source": {
         "web": {
-          "finishRate": 45,
-          "noSubmitRate": 3,
-          "userCount": 500
+          "finishRate": 90,
+          "noSubmitRate": 8,
+          "userCount": 10000
         },
         "tablet": {
           "finishRate": 24,
@@ -34,7 +34,7 @@
       "episodeName": "episode3",
       "source": {
         "web": {
-          "finishRate": 24,
+          "finishRate": 40,
           "noSubmitRate": 3,
           "userCount": 5000
         },
