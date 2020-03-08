@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/1.3.4/chroma.min.js"></script>
+  <style>
+    body { margin:0;top:0;right:0;bottom:0;left:0; }
+    svg { font-family: Courier; }
+    .annotation-note-title, text.title { font-weight: bold; }
+    text.title { font-size: 1.2em; }
+  </style>
+</head>
+<body>
+<svg width="960" height="960">
+  <text class="title" x=40 y=50>simple d3.pack()</text>
+  <g transform="translate(1,1)"></g>
+</svg>
+
+<script>
+  var svg   = d3.select("svg");
+  var width = +svg.attr("width");
+  var height= +svg.attr("height");
+
+  var color = d3.scaleLinear()
+          .domain([0, 30, 40, 55, 65, 100])
+          .range(['#d73027',
+            '#f46d43',
+            '#fdae61',
+            '#fee08b',
+            '#a6d96a',
+            '#66bd63'])
+          .interpolate(d3.interpolateHcl);
+  var opacity = d3.scaleLinear()
+          .domain([0,10])
+          .range([0.3, 1]);
+
+
+
+  var packLayout = d3.pack()
+    .size([width - 2, height - 2])
+    .padding(6);
+
+  // Get the data from our CSV file
+  // d3.json('circlePackingTestFile.json', function(error, data) {
+  d3.csv('circlePackingTestFile.csv', function(error, data) {
+
+    data.sort(function(x, y){
+      return d3.ascending(x.size, y.size)
+    });
+    if (error) throw error;
+
+    var stratData = d3.stratify()(data);
+    var root =
+        d3.hierarchy(stratData)
+        .sum(function (d) {
+          return d.data.size
+        })
+        .sort(function(a, b) { return b.value - a.value });
+
+    var descendants = root.descendants();
+
+    packLayout(root);
+
+    var nodes =
+      d3.select('svg g')
+      .selectAll('circle')
+      .data(descendants)
+      .enter()
+      .append('circle')
+      .attr('cx', function (d) { return d.x; })
+      .attr('cy', function (d) { return d.y; })
+      .attr('r', function (d) { return d.r; })
+      .attr("opacity", function (d) {
+        if (d.data.data.noSubmitRate) {
+          return opacity(parseInt(d.data.data.noSubmitRate));
+        } else {
+          return 0.4;
+        }
+      })
+      .attr("stroke", d => d.children ? "#bbb" : "none")
+      .style("fill", function(d) {
+        if (d.data.data.finishRate) {
+          return color(parseInt(d.data.data.finishRate));
+        } else {
+          return "none";
+        }
+      })
+
+    var textNodes = d3.select('svg g')
+            .selectAll('g')
+            .data(descendants)
+            .enter()
+            .append('g')
+            .attr('transform', function(d) {return 'translate(' + [d.x, d.y] + ')'});
+
+
+    textNodes
+        .append('circle')
+        .attr('r', function(d) { return d.r; })
+        .attr('fill', function(d) { return "none"; });
+
+    textNodes
+        .append('text')
+        .style("text-anchor", "middle")
+        .attr('dy', 4)
+        .attr("font-family",  "sans-serif")
+        .attr("font-size", function(d){
+          return d.r/8;
+        })
+        .text(function(d) {
+          return d.children === undefined ? d.data.data.parentId + " " + d.data.data.id : '';
+        });
+
+    nodes.append("title")
+            .attr("x", function(d){ return d.x })
+            .attr("y", function(d){ return d.y })
+            .text(function(d) {
+              if (!d.children) {
+                return d.data.data.parentId+ " " + d.data.data.id
+              } else {
+                return "";
+              }
+            });
+
+  });
+
+</script>
+</body>

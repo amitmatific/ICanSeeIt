@@ -1,0 +1,8 @@
+id,parentId,size,finishRate,noSubmitRate
+root
+AbsoluteValueWithCards,root
+BalloonsSubtraction,root
+Web,AbsoluteValueWithCards,5000,58,4
+Tablet,AbsoluteValueWithCards,430,66,10
+Web,BalloonsSubtraction,2023,38,7
+Tablet,BalloonsSubtraction,105,15,8

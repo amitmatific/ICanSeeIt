@@ -1,0 +1,32 @@
+{
+  "children": [
+    {
+      "Name": "AbsoluteValueWithCards",
+      "children": [
+        {
+          "Name": "web",
+          "size": "1000"
+        },
+        {
+          "Name": "native",
+          "size": "950"
+        }
+
+      ]
+    },
+    {
+      "Name": "BalloonsSubtraction",
+      "children": [
+        {
+          "Name": "web",
+          "size": "340"
+        },
+        {
+          "Name": "native",
+          "size": "500"
+        }
+
+      ]
+    }
+  ]
+}
